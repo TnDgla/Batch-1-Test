@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
                 leaderboardBody.appendChild(row);
             });
-        };
+        }; 
 
         // Filter function
         const filterData = (section) => {
