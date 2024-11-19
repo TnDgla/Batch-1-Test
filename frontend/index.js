@@ -47,6 +47,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.body.removeChild(link);
         };
 
+        
+        
+        
+        
         // Function to render the leaderboard
         const renderLeaderboard = (sortedData) => {
             leaderboardBody.innerHTML = '';
@@ -68,10 +72,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td class="p-4 text-red-400">${student.hardSolved || 'N/A'}</td>
                 `;
                 leaderboardBody.appendChild(row);
+                    x=row.toString();
+                row.addEventListener("click",()=>
+                    {
+                        
+                        
+
+                        row.style.position='fixed';           
+                        row.style.border='solid 5px'
+                        row.style.color='red'
+                        
+                    });
+                    
             });
         };
 
-        // Filter function
+                
+            // Filter function
         const filterData = (section) => {
             filteredData = section === 'all' 
                 ? [...data]
@@ -100,6 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         };
 
+        
         // Initialize the page
         populateSectionFilter();
         renderLeaderboard(data);
@@ -118,6 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const sortedData = sortData(filteredData, 'section', sectionDirection, false);
             renderLeaderboard(sortedData);
         });
+        
 
         document.getElementById('sort-total').addEventListener('click', () => {
             totalSolvedDirection = totalSolvedDirection === 'desc' ? 'asc' : 'desc';
