@@ -147,3 +147,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching data:', error);
     }
 });
+function handleButtonClick(button) {
+    const Roll_Number = button.parentNode.parentNode.dataset.Roll_Number;
+}
+// pin function
+function mycreatefunction(){
+var table = document.getElementById("handleButtonClick");
+var row = table.insertRow(0);
+var cell1=row.insertRow(0);
+var cell2 = row.insertRow(1);
+cell1.innerHTML="New cell1";
+cell2.innerHTML="New cell2";
+}
