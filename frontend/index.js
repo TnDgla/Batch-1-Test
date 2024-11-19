@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.body.removeChild(link);
         };
 
+       
+
         // Function to render the leaderboard
         const renderLeaderboard = (sortedData) => {
             leaderboardBody.innerHTML = '';
@@ -61,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             ? `<a href="${student.url}" target="_blank" class="text-blue-400">${student.name}</a>`
                             : `<div class="text-red-500">${student.name}</div>`}
                     </td>
-                    <td class="p-4">${student.section || 'N/A'}</td>
+                    <td class="p-4" id="o">${student.section || 'N/A'}</td>
                     <td class="p-4">${student.totalSolved || 'N/A'}</td>
                     <td class="p-4 text-green-400">${student.easySolved || 'N/A'}</td>
                     <td class="p-4 text-yellow-400">${student.mediumSolved || 'N/A'}</td>
@@ -78,6 +80,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 : data.filter(student => (student.section || 'N/A') === section);
             renderLeaderboard(filteredData);
         };
+
+        // $('tr').on("click", function () {
+        //     scrollThisToTop(this);
+        // });
 
         // Sorting logic with ascending and descending functionality
         let totalSolvedDirection = 'desc';
@@ -142,6 +148,52 @@ document.addEventListener('DOMContentLoaded', async () => {
             const sortedData = sortData(filteredData, 'hardSolved', hardSolvedDirection, true);
             renderLeaderboard(sortedData);
         });
+
+
+
+        var table = document.getElementById("leaderboard-body"); 
+        table.addEventListener("click", function(event) {
+        var clickedRow = event.target.closest("tr"); 
+        console.log(clickedRow);
+        if (clickedRow) {
+            console.log(clickedRow.parentNode);
+            console.log(clickedRow.parentNode.insertRow(0).appendChild(clickedRow));
+            const c=clickedRow.parentNode.removeChild(clickedRow);
+            clickedRow.parentNode.insertRow(0).appendChild(clickedRow);
+            clickedRow.parentNode.insertBefore(clickedRow,c);
+            
+            renderLeaderboard(clickedRow);
+        }
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var table = document.getElementById("leaderboard-body"); 
+        table.addEventListener("click", function(event) {
+        const clickedRow = event.target.closest("tr"); 
+        console.log(clickedRow);
+        if (clickedRow) {
+            console.log(clickedRow.parentNode);
+            clickedRow.parentNode.removeChild(clickedRow);
+            clickedRow.parentNode.insertRow(0).appendChild(clickedRow);
+            console.log(clickedRow.parentNode.insertRow(0));
+            //renderLeaderboard(clickedRow.parentNode);
+        }
+    });
+
+    });
+
+
+
+       
+        
+            // const leader=document.getElementById('leaderboard-body');
+            // leader.addEventListener('click',(event)=>{
+            //     const newdata= data.index=0;
+            //     renderLeaderboard(newdata);
+            // })
+        
+        
 
     } catch (error) {
         console.error('Error fetching data:', error);
