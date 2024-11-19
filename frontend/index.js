@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const leaderboardBody = document.getElementById('leaderboard-body');
         const sectionFilter = document.getElementById('section-filter');
 
-        // Populate section filter dropdown
         const populateSectionFilter = () => {
             const sections = [...new Set(data.map(student => student.section || 'N/A'))].sort();
             sectionFilter.innerHTML = '<option value="all">All Sections</option>';
@@ -17,8 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 sectionFilter.appendChild(option);
             });
         };
-
-        // Function to export data to CSV
         const exportToCSV = (data) => {
             const headers = ['Rank', 'Roll Number', 'Name', 'Section', 'Total Solved', 'Easy', 'Medium', 'Hard', 'LeetCode URL'];
             const csvRows = data.map((student, index) => {
@@ -46,8 +43,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             link.click();
             document.body.removeChild(link);
         };
-
-        // Function to render the leaderboard
         const renderLeaderboard = (sortedData) => {
             leaderboardBody.innerHTML = '';
             sortedData.forEach((student, index) => {
@@ -70,6 +65,28 @@ document.addEventListener('DOMContentLoaded', async () => {
                 leaderboardBody.appendChild(row);
             });
         };
+        
+        const leaderboardBod = document.getElementById('leaderboard-body');
+function pinRow(row) {
+    row.classList.add('pinned');
+    leaderboardBod.prepend(row);
+}
+leaderboardBod.addEventListener('click', (e) => {
+    if (e.target.tagName === 'TD') {
+        const row = e.target.parentNode;
+        if (!row.classList.contains('pinned')) {
+            pinRow(row);
+        }
+    }
+});
+
+const unpinAllButton = document.getElementById('unpin-all');
+unpinAllButton.addEventListener('click', () => {
+    const pinnedRows = leaderboardBody.querySelectorAll('.pinned');
+    pinnedRows.forEach((row) => {
+        row.classList.remove('pinned');
+    });
+});
 
         // Filter function
         const filterData = (section) => {
