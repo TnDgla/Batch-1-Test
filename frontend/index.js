@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         };
 
+
         // Initialize the page
         populateSectionFilter();
         renderLeaderboard(data);

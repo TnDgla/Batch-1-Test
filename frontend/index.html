@@ -5,9 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>LeetCode Leaderboard</title>
 </head>
 <body class="bg-gray-900 text-white p-5">
+
+    <!--Pin box for task - 1 -->
+    
+      <div class="navbar">
+        <a href="#home">Pinned persons information is shown here...</a>
+      </div>
+      <div class="main">
+        <p></p>
+      </div>
+
+      <div>
+        <h1>Task 1 :Pin box </h1>
+      </div>
+
+
+    <!--Search bar for task - 3 innovation-->
+    <div>
+       <h1> Task 3(Bonus task) Search a person according to their University Roll No. :- </h1>
+    </div>
+    <div class="topnav">
+        <a class="active" href="#home">Added a Search Bar - for innovation points</a>
+        <input type="number" id="myInput" onkeyup="filterFunction()" placeholder="Search for University Roll No...">
+            </div>
+            <script>
+                function myFunction() {
+                    document.getElementById("myInput").classList.toggle("show");
+                  }
+
+                    function filterFunction() {
+                    var input, filter, ul, li, a, i;
+                    input = document.getElementById("myInput");
+                    filter = input.value.toUpperCase();
+                    div = document.getElementById("myDropdown");
+                    a = div.getElementsByTagName("a");
+                    for (i = 0; i < a.length; i++) {
+                      txtValue = a[i].textContent || a[i].innerText;
+                      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        a[i].style.display = "";
+                      } else {
+                        a[i].style.display = "none";
+                      }
+                    }
+                  }
+               
+                </script>
+
+                <div>
+                    <h1>Task 2 Comparison box : </h1>
+                </div>
+
+                <!--Comparison box for task 2-->
+                <table>
+                    <tr>
+                      <th style="width:50%">Compare 2 people</th>
+                      <th>Total Questions</th>
+                      <th>More Active on leetcode</th>
+                    </tr>
+                    <tr>
+                      <td>Person 1</td>
+                      <td><i class="fa fa-remove"></i></td>
+                      <td><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                      <td>Person 2</td>
+                      <td><i class="fa fa-check"></i></td>
+                      <td><i class="fa fa-check"></i></td>
+                    </tr>
+                  </table>
+                
+                  
+                  
+                
+
     <div class="container mx-auto my-10">
         <div class="">
             <!-- Leaderboard -->
