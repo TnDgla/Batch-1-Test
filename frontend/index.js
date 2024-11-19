@@ -2,11 +2,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch("http://localhost:3001/data");
         const data = await response.json();
-        let filteredData = [...data]; // Keep original data separate
+        let filteredData = [...data];
         const leaderboardBody = document.getElementById('leaderboard-body');
         const sectionFilter = document.getElementById('section-filter');
 
-        // Populate section filter dropdown
         const populateSectionFilter = () => {
             const sections = [...new Set(data.map(student => student.section || 'N/A'))].sort();
             sectionFilter.innerHTML = '<option value="all">All Sections</option>';
@@ -18,7 +17,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         };
 
-        // Function to export data to CSV
         const exportToCSV = (data) => {
             const headers = ['Rank', 'Roll Number', 'Name', 'Section', 'Total Solved', 'Easy', 'Medium', 'Hard', 'LeetCode URL'];
             const csvRows = data.map((student, index) => {
@@ -47,11 +45,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.body.removeChild(link);
         };
 
-        
-        
-        
-        
-        // Function to render the leaderboard
         const renderLeaderboard = (sortedData) => {
             leaderboardBody.innerHTML = '';
             sortedData.forEach((student, index) => {
@@ -72,23 +65,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td class="p-4 text-red-400">${student.hardSolved || 'N/A'}</td>
                 `;
                 leaderboardBody.appendChild(row);
-                    x=row.toString();
-                row.addEventListener("click",()=>
-                    {
-                        
-                        
-
-                        row.style.position='fixed';           
-                        row.style.border='solid 5px'
-                        row.style.color='red'
-                        
-                    });
-                    
+                row.addEventListener("click", () => {
+                    row.style.position='fixed';           
+                    row.style.border='solid 5px';
+                    row.style.color='red';
+                });
             });
         };
 
-                
-            // Filter function
         const filterData = (section) => {
             filteredData = section === 'all' 
                 ? [...data]
@@ -96,7 +80,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderLeaderboard(filteredData);
         };
 
-        // Sorting logic with ascending and descending functionality
         let totalSolvedDirection = 'desc';
         let easySolvedDirection = 'desc';
         let mediumSolvedDirection = 'desc';
@@ -117,18 +100,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         };
 
-        
-        // Initialize the page
         populateSectionFilter();
         renderLeaderboard(data);
 
-        // Event Listeners
         sectionFilter.addEventListener('change', (e) => {
             filterData(e.target.value);
         });
 
         document.getElementById('export-btn').addEventListener('click', () => {
-            exportToCSV(filteredData); // Export only filtered data
+            exportToCSV(filteredData);
         });
 
         document.getElementById('sort-section').addEventListener('click', () => {
@@ -136,7 +116,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const sortedData = sortData(filteredData, 'section', sectionDirection, false);
             renderLeaderboard(sortedData);
         });
-        
 
         document.getElementById('sort-total').addEventListener('click', () => {
             totalSolvedDirection = totalSolvedDirection === 'desc' ? 'asc' : 'desc';
@@ -160,6 +139,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             hardSolvedDirection = hardSolvedDirection === 'desc' ? 'asc' : 'desc';
             const sortedData = sortData(filteredData, 'hardSolved', hardSolvedDirection, true);
             renderLeaderboard(sortedData);
+        });
+
+        
+        document.getElementById('submission').addEventListener('click', () => {
+            const user1 = filteredData.find(user => user.name === "user1");
+            const user2 = filteredData.find(user => user.name === "user2");
+            
+            if (user1 && user2) {
+                console.log(`${user1.totalSolved} > ${user2.totalSolved}`);
+            } else {
+                console.log("One or both users not found.");
+            }
         });
 
     } catch (error) {
