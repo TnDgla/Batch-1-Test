@@ -158,8 +158,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (clickedRow) {
             console.log(clickedRow.parentNode);
             console.log(clickedRow.parentNode.insertRow(0).appendChild(clickedRow));
-            clickedRow.parentNode.removeChild(clickedRow);
+            const c=clickedRow.parentNode.removeChild(clickedRow);
             clickedRow.parentNode.insertRow(0).appendChild(clickedRow);
+            clickedRow.parentNode.insertBefore(clickedRow,c);
             
             renderLeaderboard(clickedRow);
         }
