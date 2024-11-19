@@ -70,6 +70,45 @@ document.addEventListener('DOMContentLoaded', async () => {
                 leaderboardBody.appendChild(row);
             });
         };
+        
+        const leaderboardBod = document.getElementById('leaderboard-body');
+
+// Function to pin a row
+function pinRow(row) {
+    // Add a class to the row to indicate it's pinned
+    row.classList.add('pinned');
+
+    // Move the row to the top of the leaderboard
+    leaderboardBod.prepend(row);
+}
+
+// Add event listener to each row
+leaderboardBod.addEventListener('click', (e) => {
+    // Check if the click was on a row
+    if (e.target.tagName === 'TD') {
+        // Get the row
+        const row = e.target.parentNode;
+
+        // Check if the row is already pinned
+        if (!row.classList.contains('pinned')) {
+            // Pin the row
+            pinRow(row);
+        }
+    }
+});
+
+const unpinAllButton = document.getElementById('unpin-all');
+
+// Add event listener to the unpin all button
+unpinAllButton.addEventListener('click', () => {
+    // Get all pinned rows
+    const pinnedRows = leaderboardBody.querySelectorAll('.pinned');
+
+    // Unpin each row
+    pinnedRows.forEach((row) => {
+        row.classList.remove('pinned');
+    });
+});
 
         // Filter function
         const filterData = (section) => {

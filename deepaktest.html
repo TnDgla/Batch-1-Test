@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table id="leaderboard">
+  <tr onclick="pin(event)">
+    <td>Parth</td>
+  </tr>
+  <tr onclick="pin(event)">
+    <td>Naman</td>
+  </tr>
+</table>
+</body>
+<script>
+    function pin(event) {
+        const row=event.target.parentNode;
+        const leaderboard=row.parentNode;
+        leaderboard.insertBefore(row,leaderboard.firstChild);
+    }
+</script>
+</html>
