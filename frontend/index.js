@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch("http://localhost:3001/data");
         const data = await response.json();
         let filteredData = [...data]; // Keep original data separate
+        let pinnedUsers = [];
+
         const leaderboardBody = document.getElementById('leaderboard-body');
         const sectionFilter = document.getElementById('section-filter');
 
@@ -34,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     student.url
                 ].join(',');
             });
-            
+
             const csvContent = [headers.join(','), ...csvRows].join('\n');
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
@@ -50,16 +52,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Function to render the leaderboard
         const renderLeaderboard = (sortedData) => {
             leaderboardBody.innerHTML = '';
+
+            // Get the top 3 students
+            const top3 = sortedData.slice(0, 3); // Get the first 3 sorted students
+
             sortedData.forEach((student, index) => {
                 const row = document.createElement('tr');
                 row.classList.add('border-b', 'border-gray-700');
+
+                // Check if the student is in the top 3
+                const isTop3 = top3.includes(student);
+                const studentName = isTop3
+                    ? `<span style="color: #FFD700;">${student.name} 🏆</span>`  // Golden color and award emoji for top 3
+                    : student.name;
+
                 row.innerHTML = `
                     <td class="p-4">${index + 1}</td>
                     <td class="p-4">${student.roll}</td>
                     <td class="p-4">
-                        ${student.url.startsWith('https://leetcode.com/u/') 
-                            ? `<a href="${student.url}" target="_blank" class="text-blue-400">${student.name}</a>`
-                            : `<div class="text-red-500">${student.name}</div>`}
+                        <button class="text-blue-400" data-roll="${student.roll}">
+                            ${studentName} ${pinnedUsers.includes(student.roll) ? '📌' : ''}
+                        </button>
                     </td>
                     <td class="p-4">${student.section || 'N/A'}</td>
                     <td class="p-4">${student.totalSolved || 'N/A'}</td>
@@ -69,23 +82,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
                 leaderboardBody.appendChild(row);
             });
-        };
+        }; 
 
         // Filter function
         const filterData = (section) => {
-            filteredData = section === 'all' 
+            filteredData = section === 'all'
                 ? [...data]
                 : data.filter(student => (student.section || 'N/A') === section);
             renderLeaderboard(filteredData);
         };
 
         // Sorting logic with ascending and descending functionality
-        let totalSolvedDirection = 'desc';
-        let easySolvedDirection = 'desc';
-        let mediumSolvedDirection = 'desc';
-        let hardSolvedDirection = 'desc';
-        let sectionDirection = 'asc';
-
         const sortData = (data, field, direction, isNumeric = false) => {
             return data.sort((a, b) => {
                 const valA = a[field] || (isNumeric ? 0 : 'Z');
@@ -100,6 +107,33 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         };
 
+        // Pin a user to the top by clicking on their name
+        leaderboardBody.addEventListener('click', (event) => {
+            if (event.target.tagName === 'BUTTON' && event.target.dataset.roll) {
+                const rollNumber = event.target.dataset.roll;
+
+                if (pinnedUsers.includes(rollNumber)) {
+                    // Unpin the user
+                    pinnedUsers = pinnedUsers.filter(roll => roll !== rollNumber);
+                } else {
+                    // Pin the user
+                    pinnedUsers.push(rollNumber);
+                }
+
+                // Re-sort the data, with pinned users at the top
+                const sortedData = [...filteredData].sort((a, b) => {
+                    if (pinnedUsers.includes(a.roll) && !pinnedUsers.includes(b.roll)) {
+                        return -1;
+                    } else if (!pinnedUsers.includes(a.roll) && pinnedUsers.includes(b.roll)) {
+                        return 1;
+                    }
+                    return b.totalSolved - a.totalSolved; // Sort by total solved
+                });
+
+                renderLeaderboard(sortedData);
+            }
+        });
+
         // Initialize the page
         populateSectionFilter();
         renderLeaderboard(data);
@@ -111,36 +145,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.getElementById('export-btn').addEventListener('click', () => {
             exportToCSV(filteredData); // Export only filtered data
-        });
-
-        document.getElementById('sort-section').addEventListener('click', () => {
-            sectionDirection = sectionDirection === 'desc' ? 'asc' : 'desc';
-            const sortedData = sortData(filteredData, 'section', sectionDirection, false);
-            renderLeaderboard(sortedData);
-        });
-
-        document.getElementById('sort-total').addEventListener('click', () => {
-            totalSolvedDirection = totalSolvedDirection === 'desc' ? 'asc' : 'desc';
-            const sortedData = sortData(filteredData, 'totalSolved', totalSolvedDirection, true);
-            renderLeaderboard(sortedData);
-        });
-
-        document.getElementById('sort-easy').addEventListener('click', () => {
-            easySolvedDirection = easySolvedDirection === 'desc' ? 'asc' : 'desc';
-            const sortedData = sortData(filteredData, 'easySolved', easySolvedDirection, true);
-            renderLeaderboard(sortedData);
-        });
-
-        document.getElementById('sort-medium').addEventListener('click', () => {
-            mediumSolvedDirection = mediumSolvedDirection === 'desc' ? 'asc' : 'desc';
-            const sortedData = sortData(filteredData, 'mediumSolved', mediumSolvedDirection, true);
-            renderLeaderboard(sortedData);
-        });
-
-        document.getElementById('sort-hard').addEventListener('click', () => {
-            hardSolvedDirection = hardSolvedDirection === 'desc' ? 'asc' : 'desc';
-            const sortedData = sortData(filteredData, 'hardSolved', hardSolvedDirection, true);
-            renderLeaderboard(sortedData);
         });
 
     } catch (error) {
