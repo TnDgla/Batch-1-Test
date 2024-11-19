@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Question 1 and 2</title>
+  </head>
+  <body>
+    <table id="rows">
+      <tbody>
+        <tr onclick="topof(this)">
+          <td>1</td>
+          <td>Nishant Gupta</td>
+          <td>23</td>
+        </tr>
+        <tr onclick="topof(this)">
+          <td>2</td>
+          <td>Priyanshu Sharma</td>
+          <td>90</td>
+        </tr>
+        <tr onclick="topof(this)">
+          <td>3</td>
+          <td>Tushar Dixit</td>
+          <td>75</td>
+        </tr>
+        <tr onclick="topof(this)">
+          <td>3</td>
+          <td>yatharth Dixit</td>
+          <td>75</td>
+        </tr>
+        <tr onclick="topof(this)">
+          <td>3</td>
+          <td>raajan</td>
+          <td>75</td>
+        </tr>
+        <tr onclick="topof(this)">
+          <td>3</td>
+          <td>bahadur</td>
+          <td>75</td>
+        </tr>
+        <tr onclick="topof(this)">
+          <td>3</td>
+          <td>Toto</td>
+          <td>75</td>
+        </tr>
+        <tr onclick="topof(this)">
+          <td>3</td>
+          <td>Sachin</td>
+          <td>75</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script>
+      function topof(row) {
+        const tbody = document.querySelector("#rows tbody");
+        const rows = Array.from(tbody.rows);
+
+        rows.forEach((rr) => rr.classList.remove("pinned"));
+
+        tbody.insertBefore(row, tbody.firstChild);
+        row.classList.add("pinned");
+      }
+    </script>
+  </body>
+</html>

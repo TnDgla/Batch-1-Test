@@ -1,0 +1,25 @@
+<html>
+  <head></head>
+
+  <body>
+    <button onclick="onButtonClick()">input1 == input2 ?</button>
+    <br /><input id="input1" type="text" value="55" />
+    <input id="input2" type="text" value="55" />
+
+    <script>
+      function serviceCheck() {
+        let in1 = document.getElementById("input1").value;
+        let in2 = document.getElementById("input2").value;
+
+        if (in1 == in2) {
+          alert("true");
+        } else {
+          alert("false");
+        }
+      }
+      function onButtonClick() {
+        serviceCheck();
+      }
+    </script>
+  </body>
+</html>
