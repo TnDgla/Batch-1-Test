@@ -17,6 +17,58 @@ document.addEventListener('DOMContentLoaded', async () => {
                 sectionFilter.appendChild(option);
             });
         };
+    const openButton = document.getElementById('openDialog');
+      const dialog = document.getElementById('dialogBox');
+      const closeButton = document.getElementById('closebtn');
+      const compare=document.querySelector(".compare")
+      openButton.addEventListener('click', () => {
+        dialog.showModal();
+     });
+  
+     closeButton.addEventListener('click', () => {
+        dialog.close();
+     });
+     compare.addEventListener('click', () => {
+        const User1 = document.getElementById("user1");
+        const User2 = document.getElementById("user2");
+        const user1Name = User1.value.trim();
+        const user2Name = User2.value.trim();
+    
+        if (!user1Name || !user2Name) {
+            alert("Please enter names for both users.");
+            return;
+        }
+    
+        let total1 = null;
+        let total2 = null;
+    
+        data.forEach(student => {
+            if (student.roll === user1Name) {
+                total1 = student.totalSolved;
+            }
+            if (student.roll === user2Name) {
+                total2 = student.totalSolved;
+            }
+        });
+    
+        if (total1 === null || total2 === null) {
+            alert("One or both users not found in the data.");
+            return;
+        }
+        else{
+            alert("error")
+        }
+    
+        // Display the comparison results
+        const comparisonResult = document.createElement("div")
+        comparisonResult.innerHTML = `
+            <p>${user1Name}: ${total1} problems solved</p>
+            <p>${user2Name}: ${total2} problems solved</p>
+            <p>${total1 > total2 ? `${user1Name} is leading` : total1 < total2 ? `${user2Name} is leading` : "It's a tie!"}</p>
+        `;
+        dialog.appendChild(comparisonResult)
+    });
+    
 
         // Function to export data to CSV
         const exportToCSV = (data) => {
@@ -49,7 +101,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Function to render the leaderboard
         const renderLeaderboard = (sortedData) => {
+            let btn="";
             leaderboardBody.innerHTML = '';
+            let ul=document.createElement("ul")
+            leaderboardBody.appendChild(ul);
             sortedData.forEach((student, index) => {
                 const row = document.createElement('tr');
                 row.classList.add('border-b', 'border-gray-700');
@@ -66,9 +121,37 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td class="p-4 text-green-400">${student.easySolved || 'N/A'}</td>
                     <td class="p-4 text-yellow-400">${student.mediumSolved || 'N/A'}</td>
                     <td class="p-4 text-red-400">${student.hardSolved || 'N/A'}</td>
+                    
                 `;
+                btn=document.createElement("button")
+                
+                btn.innerHTML="pin";
+                btn.style.color="purple"
+                btn.style.margin="30px"
+                row.appendChild(btn)
                 leaderboardBody.appendChild(row);
+                btn.addEventListener("click",()=>{
+                    let r1=leaderboardBody.insertRow(0)
+                    r1.innerHTML=`
+                    <td class="p-4">Pinned</td>
+                    <td class="p-4">${student.roll}</td>
+                    <td class="p-4">
+                        ${student.url.startsWith('https://leetcode.com/u/') 
+                            ? `<a href="${student.url}" target="_blank" class="text-blue-400">${student.name}</a>`
+                            : `<div class="text-red-500">${student.name}</div>`}
+                    </td>
+                    <td class="p-4">${student.section || 'N/A'}</td>
+                    <td class="p-4">${student.totalSolved || 'N/A'}</td>
+                    <td class="p-4 text-green-400">${student.easySolved || 'N/A'}</td>
+                    <td class="p-4 text-yellow-400">${student.mediumSolved || 'N/A'}</td>
+                    <td class="p-4 text-red-400">${student.hardSolved || 'N/A'}</td>
+                `;
+                   
+                    leaderboardBody.removeChild(row)
+                })
             });
+           
+            
         };
 
         // Filter function
