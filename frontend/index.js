@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch("http://localhost:3001/data");
         const data = await response.json();
         let filteredData = [...data]; // Keep original data separate
-        let pinnedUsers = []; // To track pinned users by their roll number
+        let pinnedUsers = [];
 
         const leaderboardBody = document.getElementById('leaderboard-body');
         const sectionFilter = document.getElementById('section-filter');
@@ -52,15 +52,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Function to render the leaderboard
         const renderLeaderboard = (sortedData) => {
             leaderboardBody.innerHTML = '';
+
+            // Get the top 3 students
+            const top3 = sortedData.slice(0, 3); // Get the first 3 sorted students
+
             sortedData.forEach((student, index) => {
                 const row = document.createElement('tr');
                 row.classList.add('border-b', 'border-gray-700');
+
+                // Check if the student is in the top 3
+                const isTop3 = top3.includes(student);
+                const studentName = isTop3
+                    ? `<span style="color: #FFD700;">${student.name} 🏆</span>`  // Golden color and award emoji for top 3
+                    : student.name;
+
                 row.innerHTML = `
                     <td class="p-4">${index + 1}</td>
                     <td class="p-4">${student.roll}</td>
                     <td class="p-4">
                         <button class="text-blue-400" data-roll="${student.roll}">
-                            ${student.name} ${pinnedUsers.includes(student.roll) ? '📌' : ''}
+                            ${studentName} ${pinnedUsers.includes(student.roll) ? '📌' : ''}
                         </button>
                     </td>
                     <td class="p-4">${student.section || 'N/A'}</td>
