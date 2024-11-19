@@ -89,3 +89,17 @@ setInterval(fetchAndSaveData, 60 * 60 * 1000);
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const leaderboardBody = document.getElementById("leaderboard-body");
+
+  leaderboardBody.addEventListener("click", (event) => {
+      let targetRow = event.target.closest("tr"); 
+      if (!targetRow || !leaderboardBody.contains(targetRow)) return;
+
+      leaderboardBody.prepend(targetRow);
+
+      targetRow.classList.add("bg-yellow-500");
+      setTimeout(() => targetRow.classList.remove("bg-yellow-500"), 1500);
+  });
+});
