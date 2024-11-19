@@ -1,3 +1,22 @@
+import "@ag-grid-community/styles/ag-grid.css"
+import "@ag-grid-community/styles/ag-theme-quartz.css"
+import{ClientSideRowModelModule} from "@ag-grid-community/client-side-row-model";
+import{
+  ColDef,
+  ColGroupDef,
+  GridApi,
+  GridOptions,
+  ModuleRegistry,
+  RowClassParams,
+  RowStyle,
+  createGrid,
+} from "@ag-grid-community/core";
+import { CustomPinnedRowRenderer } from "./customPinnedRowRenderer";
+import { IOlympicData } from "./interfaces";
+
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch("http://localhost:3001/data");
@@ -24,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const csvRows = data.map((student, index) => {
                 return [
                     index + 1,
+                    pinnedTopRowData[
                     student.roll,
                     student.name,
                     student.section || 'N/A',
@@ -32,6 +52,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     student.mediumSolved || 'N/A',
                     student.hardSolved || 'N/A',
                     student.url
+
+                    ]
                 ].join(',');
             });
             
@@ -85,6 +107,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         let mediumSolvedDirection = 'desc';
         let hardSolvedDirection = 'desc';
         let sectionDirection = 'asc';
+        var gridDiv = document.querySelector<HTMLElement>("#myGrid")!;
+        gridApi = createGrid(gridDiv, gridOptions);
+        let gridApi: GridApi<>;
+
+        const gridOptions: GridOptions<> = {
+        defaultColDef: {
+        flex: 1,
+       },
+        columnDefs: columnDefs,
+        rowData: null,
 
         const sortData = (data, field, direction, isNumeric = false) => {
             return data.sort((a, b) => {
@@ -142,6 +174,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const sortedData = sortData(filteredData, 'hardSolved', hardSolvedDirection, true);
             renderLeaderboard(sortedData);
         });
+        
+
 
     } catch (error) {
         console.error('Error fetching data:', error);
