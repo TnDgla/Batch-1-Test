@@ -28,39 +28,40 @@ document.addEventListener('DOMContentLoaded', async () => {
             setTimeout(() => clickedRow.classList.remove('bg-blue-900'), 1000); // Remove highlight after 1 second
         });
 
-        const players = () => {
-
-
-        }
 
         //function to campare two students data
-
-        function camparePlayer()  {
-            const player1 = document.getElementById('player1').value.trim();
-            const player2 = document.getElementById('player2').value.trim();
-
-            const box = document.getElementById("camparionBox");
-            if (!player1[player1] || !player1[player2]) {
-                box.innerHTML = "<p style='color: red;'>Invalid players. Please check the names.</p>";
-                return;
-              }
-        
-              const p1 = player1[player1];
-              const p2 = player1[player2];
-        
-              box.innerHTML = `
-                <p>Comparing <strong>${player1}</strong> and <strong>${player2}</strong>:</p>
-                <ul>
-                  <li>Total: ${p1.total > p2.total ? player1 : player2} > (${p1.total} vs ${p2.total})</li>
-                  <li>Easy Questions: ${p1.easy > p2.easy ? player1 : player2} > (${p1.easy} vs ${p2.easy})</li>
-                  <li>Medium Questions: ${p1.medium > p2.medium ? player1 : player2} > (${p1.medium} vs ${p2.medium})</li>
-                  <li>Hard Questions: ${p1.hard > p2.hard ? player1 : player2} > (${p1.hard} vs ${p2.hard})</li>
-                </ul>
-              `;
+        const players = {
+            Naman: { total: 68, easy: 54, medium: 12, hard: 2 },
+            Parth: { total: 96, easy: 90, medium: 5, hard: 1 },
+            Riya: { total: 75, easy: 60, medium: 10, hard: 5 }
+          };
+      
+          function comparePlayers() {
+            const player1 = document.getElementById("player1").value.trim();
+            const player2 = document.getElementById("player2").value.trim();
+            const box = document.getElementById("comparisonBox");
+      
+            if (!players[player1] || !players[player2]) {
+              box.innerHTML = "<p style='color: red;'>Invalid players. Please check the names.</p>";
+              return;
             }
+      
+            const p1 = players[player1];
+            const p2 = players[player2];
+      
+            box.innerHTML = `
+              <p>Comparing <strong>${player1}</strong> and <strong>${player2}</strong>:</p>
+              <ul>
+                <li>Total: ${p1.total > p2.total ? player1 : player2} > (${p1.total} vs ${p2.total})</li>
+                <li>Easy Questions: ${p1.easy > p2.easy ? player1 : player2} > (${p1.easy} vs ${p2.easy})</li>
+                <li>Medium Questions: ${p1.medium > p2.medium ? player1 : player2} > (${p1.medium} vs ${p2.medium})</li>
+                <li>Hard Questions: ${p1.hard > p2.hard ? player1 : player2} > (${p1.hard} vs ${p2.hard})</li>
+              </ul>
+            `;
+          }
 
 
-        }
+        
 
 
 
@@ -191,7 +192,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderLeaderboard(sortedData);
         });
 
-    } catch (error) {
+    }
+     catch (error) {
         console.error('Error fetching data:', error);
     }
 });
