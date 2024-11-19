@@ -55,9 +55,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert("One or both users not found in the data.");
             return;
         }
-        else{
-            alert("error")
-        }
     
         // Display the comparison results
         const comparisonResult = document.createElement("div")
