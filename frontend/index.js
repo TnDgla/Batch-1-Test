@@ -18,6 +18,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         };
 
+        const pinRow = (row) => {
+            row.style.position = "sticky";
+            row.style.top = "0";
+            row.style.backgroundColor = "white";
+            row.style.zIndex = "1";
+
+        };
+
+        const pinnedFlow = document.getElementById("pinned-row");
+        pinRow(pinnedRow);
+
+        pinnedRow.addEventListener ("click", () => {
+            window.scrollTo(0,1);
+        });
+
+        
+
+        
+
+
         // Function to export data to CSV
         const exportToCSV = (data) => {
             const headers = ['Rank', 'Roll Number', 'Name', 'Section', 'Total Solved', 'Easy', 'Medium', 'Hard', 'LeetCode URL'];
