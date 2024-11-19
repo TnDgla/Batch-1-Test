@@ -15,3 +15,47 @@ tr {
 tr:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+}
+
+.comparison-table th,
+.comparison-table td {
+    border: 1px solid #4a5568;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.comparison-table th {
+    background-color: #2d3748;
+}
+
+.comparison-result {
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+.winner {
+    color: #48bb78;
+}
+
+@media (max-width: 1024px) {
+    .comparison-table {
+        font-size: 0.75rem;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+        padding: 0.25rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .comparison-table {
+        font-size: 0.675rem;
+    }
+}
