@@ -29,7 +29,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const pinnedFlow = document.getElementById("pinned-row");
         pinRow(pinnedRow);
 
-        pinnedRow.addEventListener {"click", () => };
+        pinnedRow.addEventListener ("click", () => {
+            window.scrollTo(0,1);
+        });
+
+        
+
+        
 
 
         // Function to export data to CSV
