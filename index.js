@@ -1,91 +1,128 @@
-const express = require('express');
-const fs = require('fs');
-const cors = require('cors');
-const axios = require('axios');
-const app = express();
-const port = 3001;
+document.addEventListener('DOMContentLoaded', async () => {
+    const leaderboardBody = document.getElementById('leaderboard-body');
+    const sectionFilter = document.getElementById('section-filter');
+    const loadingState = document.getElementById('loading-state');
+    const errorState = document.getElementById('error-state');
+    let data = [];
+    let filteredData = [];
+    let pinnedRows = [];
 
-app.use(cors());
+    const toggleVisibility = (element, show) => {
+        element.classList.toggle('hidden', !show);
+    };
 
-async function fetchAndSaveData() {
-  try {
-    console.log('Starting to read input files...');
-    const rolls = fs.readFileSync('roll.txt', 'utf-8').split('\n').map(line => line.trim()).filter(Boolean);
-    const names = fs.readFileSync('name.txt', 'utf-8').split('\n').map(line => line.trim()).filter(Boolean);
-    const urls = fs.readFileSync('urls.txt', 'utf-8').split('\n').map(line => line.trim()).filter(Boolean);
-    const sections = fs.readFileSync('sections.txt', 'utf-8').split('\n').map(line => line.trim()).filter(Boolean);
+    const populateSectionFilter = () => {
+        const sections = [...new Set(data.map(student => student.section || 'N/A'))].sort();
+        sectionFilter.innerHTML = '<option value="all">All Sections</option>';
+        sections.forEach(section => {
+            const option = document.createElement('option');
+            option.value = section;
+            option.textContent = section;
+            sectionFilter.appendChild(option);
+        });
+    };
 
-    if (rolls.length !== names.length || names.length !== urls.length || names.length !== sections.length) {
-      console.error('Error: The number of rolls, names, URLs, and sections do not match.');
-      return;
-    }
+    const exportToCSV = (data) => {
+        const headers = ['Rank', 'Roll Number', 'Name', 'Section', 'Total Solved', 'Easy', 'Medium', 'Hard', 'LeetCode URL'];
+        const csvRows = data.map((student, index) => [
+            index + 1,
+            student.roll,
+            student.name,
+            student.section || 'N/A',
+            student.totalSolved || 'N/A',
+            student.easySolved || 'N/A',
+            student.mediumSolved || 'N/A',
+            student.hardSolved || 'N/A',
+            student.url
+        ].join(','));
+        const csvContent = [headers.join(','), ...csvRows].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'leaderboard.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
-    console.log('Input files read successfully.');
-    const combinedData = [];
+    const renderLeaderboard = (sortedData) => {
+        leaderboardBody.innerHTML = '';
+        pinnedRows.forEach(student => leaderboardBody.appendChild(createRow(student, true)));
+        sortedData.forEach((student) => {
+            if (!pinnedRows.includes(student)) {
+                leaderboardBody.appendChild(createRow(student));
+            }
+        });
+    };
 
-    for (let i = 0; i < rolls.length; i++) {
-      const roll = rolls[i];
-      const name = names[i];
-      const url = urls[i];
-      const section = sections[i];
-      let studentData = { roll, name, url, section };
+    const createRow = (student, isPinned = false) => {
+        const row = document.createElement('tr');
+        row.classList.add('border-b', 'border-gray-700');
+        row.innerHTML = `
+            <td class="p-4">${isPinned ? 'Pinned' : ''}</td>
+            <td class="p-4">${student.roll}</td>
+            <td class="p-4">
+                ${student.url?.startsWith('https://leetcode.com/u/') 
+                    ? `<a href="${student.url}" target="_blank" class="text-blue-400">${student.name}</a>`
+                    : `<div class="text-red-500">${student.name}</div>`}
+            </td>
+            <td class="p-4">${student.section || 'N/A'}</td>
+            <td class="p-4">${student.totalSolved || 'N/A'}</td>
+            <td class="p-4 text-green-400">${student.easySolved || 'N/A'}</td>
+            <td class="p-4 text-yellow-400">${student.mediumSolved || 'N/A'}</td>
+            <td class="p-4 text-red-400">${student.hardSolved || 'N/A'}</td>
+            <td class="p-4">
+                <button class="pin-btn text-blue-500">${isPinned ? 'Unpin' : 'Pin'}</button>
+            </td>
+        `;
+        row.querySelector('.pin-btn').addEventListener('click', () => togglePinRow(student));
+        return row;
+    };
 
-      console.log(`Processing data for roll number: ${roll}, name: ${name}, section: ${section}`);
-
-      // Check if URL is a LeetCode URL
-      if (url.startsWith('https://leetcode.com/u/')) {
-        var username = url.split('/u/')[1];
-        if(username.charAt(username.length-1) == '/') username = username.substring(0, username.length-1);
-        console.log(`Fetching data for LeetCode username: ${username}`);
-
-        try {
-          const response = await axios.get(`https://leetcodeapi-v1.vercel.app/${username}`);
-          const data = response.data;
-          if (data && data[username]) {
-            studentData = {
-              ...studentData,
-              username,
-              totalSolved: data[username].submitStatsGlobal.acSubmissionNum[0].count || 0,
-              easySolved: data[username].submitStatsGlobal.acSubmissionNum[1].count || 0,
-              mediumSolved: data[username].submitStatsGlobal.acSubmissionNum[2].count || 0,
-              hardSolved: data[username].submitStatsGlobal.acSubmissionNum[3].count || 0,
-            };
-            console.log(`Data for ${username} fetched and processed successfully.`);
-          } else {
-            console.log(`No data found for ${username}`);
-          }
-        } catch (error) {
-          console.error(`Error fetching data for ${username}:`, error);
+    const togglePinRow = (student) => {
+        if (pinnedRows.includes(student)) {
+            pinnedRows = pinnedRows.filter(p => p !== student);
+        } else {
+            pinnedRows.push(student);
         }
-      } else {
-        console.log(`URL for ${name} is not a LeetCode profile. Skipping API call.`);
-        studentData.info = 'No LeetCode data available';
-      }
-      combinedData.push(studentData);
+        renderLeaderboard(filteredData);
+    };
+
+    const filterData = (section) => {
+        filteredData = section === 'all' ? [...data] : data.filter(student => (student.section || 'N/A') === section);
+        renderLeaderboard(filteredData);
+    };
+
+    const sortData = (field, direction, isNumeric = false) => {
+        filteredData.sort((a, b) => {
+            const valA = a[field] || (isNumeric ? 0 : '');
+            const valB = b[field] || (isNumeric ? 0 : '');
+            return direction === 'desc'
+                ? (isNumeric ? valB - valA : valB.localeCompare(valA))
+                : (isNumeric ? valA - valB : valA.localeCompare(valB));
+        });
+        renderLeaderboard(filteredData);
+    };
+
+    try {
+        toggleVisibility(loadingState, true);
+        const response = await fetch("http://localhost:3001/data");
+        data = await response.json();
+        filteredData = [...data];
+        toggleVisibility(loadingState, false);
+        populateSectionFilter();
+        renderLeaderboard(filteredData);
+    } catch (error) {
+        toggleVisibility(loadingState, false);
+        toggleVisibility(errorState, true);
+        console.error('Error fetching data:', error);
     }
 
-    // Sort the data by totalSolved in descending order, treating 'NA' or invalid values as 0
-    combinedData.sort((a, b) => {
-      const aTotalSolved = isNaN(a.totalSolved) ? 0 : a.totalSolved;
-      const bTotalSolved = isNaN(b.totalSolved) ? 0 : b.totalSolved;
-      return bTotalSolved - aTotalSolved;
-    });
-
-    fs.writeFileSync('data.json', JSON.stringify(combinedData, null, 2));
-    console.log('Data saved to data.json successfully.');
-  } catch (error) {
-    console.error('Error processing data:', error);
-  }
-}
-
-app.get('/data', (req, res) => {
-  res.sendFile(__dirname + '/data.json');
-});
-
-// Initial data fetch and periodic refresh every hour
-fetchAndSaveData();
-setInterval(fetchAndSaveData, 60 * 60 * 1000);
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+    sectionFilter.addEventListener('change', (e) => filterData(e.target.value));
+    document.getElementById('export-btn').addEventListener('click', () => exportToCSV(filteredData));
+    document.getElementById('sort-section').addEventListener('click', () => sortData('section', 'asc'));
+    document.getElementById('sort-total').addEventListener('click', () => sortData('totalSolved', 'desc', true));
+    document.getElementById('sort-easy').addEventListener('click', () => sortData('easySolved', 'desc', true));
+    document.getElementById('sort-medium').addEventListener('click', () => sortData('mediumSolved', 'desc', true));
+    document.getElementById('sort-hard').addEventListener('click', () => sortData('hardSolved', 'desc', true));
 });
