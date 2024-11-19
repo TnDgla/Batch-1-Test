@@ -79,6 +79,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderLeaderboard(filteredData);
         };
 
+        const pinData=(name)=>{
+            filterData=data==='name'
+              ?[...data]
+              : data.filter(student=>(student.name)==name);
+              renderLeaderboard(filterData);
+        };
+
+        
+
         // Sorting logic with ascending and descending functionality
         let totalSolvedDirection = 'desc';
         let easySolvedDirection = 'desc';
@@ -108,6 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         sectionFilter.addEventListener('change', (e) => {
             filterData(e.target.value);
         });
+
 
         document.getElementById('export-btn').addEventListener('click', () => {
             exportToCSV(filteredData); // Export only filtered data
