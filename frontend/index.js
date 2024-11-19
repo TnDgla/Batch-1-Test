@@ -20,13 +20,49 @@ document.addEventListener('DOMContentLoaded', async () => {
 
          //pin function
         leaderboardBody.addEventListener('click', function (event) {
-            // Check if the clicked element is part of a row
+            
             const clickedRow = event.target.closest('.pin-row');
             if (!clickedRow) return;
             leaderboardBody.prepend(clickedRow);
             clickedRow.classList.add('bg-blue-900');
             setTimeout(() => clickedRow.classList.remove('bg-blue-900'), 1000); // Remove highlight after 1 second
         });
+
+        const players = () => {
+
+
+        }
+
+        //function to campare two students data
+
+        function camparePlayer()  {
+            const player1 = document.getElementById('player1').value.trim();
+            const player2 = document.getElementById('player2').value.trim();
+
+            const box = document.getElementById("camparionBox");
+            if (!player1[player1] || !player1[player2]) {
+                box.innerHTML = "<p style='color: red;'>Invalid players. Please check the names.</p>";
+                return;
+              }
+        
+              const p1 = player1[player1];
+              const p2 = player1[player2];
+        
+              box.innerHTML = `
+                <p>Comparing <strong>${player1}</strong> and <strong>${player2}</strong>:</p>
+                <ul>
+                  <li>Total: ${p1.total > p2.total ? player1 : player2} > (${p1.total} vs ${p2.total})</li>
+                  <li>Easy Questions: ${p1.easy > p2.easy ? player1 : player2} > (${p1.easy} vs ${p2.easy})</li>
+                  <li>Medium Questions: ${p1.medium > p2.medium ? player1 : player2} > (${p1.medium} vs ${p2.medium})</li>
+                  <li>Hard Questions: ${p1.hard > p2.hard ? player1 : player2} > (${p1.hard} vs ${p2.hard})</li>
+                </ul>
+              `;
+            }
+
+
+        }
+
+
 
         // Function to export data to CSV
         const exportToCSV = (data) => {
@@ -83,7 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Filter function
         const filterData = (section) => {
-            filteredData = section === 'all' 
+            filterData = section === 'all' 
                 ? [...data]
                 : data.filter(student => (student.section || 'N/A') === section);
             renderLeaderboard(filteredData);
