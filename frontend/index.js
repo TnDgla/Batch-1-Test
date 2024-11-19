@@ -157,10 +157,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(clickedRow);
         if (clickedRow) {
             console.log(clickedRow.parentNode);
+            console.log(clickedRow.parentNode.insertRow(0).appendChild(clickedRow));
             clickedRow.parentNode.removeChild(clickedRow);
             clickedRow.parentNode.insertRow(0).appendChild(clickedRow);
-            console.log(clickedRow.parentNode.insertRow(0).appendChild(clickedRow));
-            renderLeaderboard(clickedRow.parentNode);
+            
+            renderLeaderboard(clickedRow);
         }
     });
 
@@ -174,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log(clickedRow.parentNode);
             clickedRow.parentNode.removeChild(clickedRow);
             clickedRow.parentNode.insertRow(0).appendChild(clickedRow);
-            console.log(clickedRow.parentNode.insertRow(0).appendChild(clickedRow));
+            console.log(clickedRow.parentNode.insertRow(0));
             //renderLeaderboard(clickedRow.parentNode);
         }
     });
