@@ -18,6 +18,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         };
 
+         //pin function
+        leaderboardBody.addEventListener('click', function (event) {
+            // Check if the clicked element is part of a row
+            const clickedRow = event.target.closest('.pin-row');
+            if (!clickedRow) return;
+            leaderboardBody.prepend(clickedRow);
+            clickedRow.classList.add('bg-blue-900');
+            setTimeout(() => clickedRow.classList.remove('bg-blue-900'), 1000); // Remove highlight after 1 second
+        });
+
         // Function to export data to CSV
         const exportToCSV = (data) => {
             const headers = ['Rank', 'Roll Number', 'Name', 'Section', 'Total Solved', 'Easy', 'Medium', 'Hard', 'LeetCode URL'];
@@ -78,6 +88,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 : data.filter(student => (student.section || 'N/A') === section);
             renderLeaderboard(filteredData);
         };
+
+        
 
         // Sorting logic with ascending and descending functionality
         let totalSolvedDirection = 'desc';
