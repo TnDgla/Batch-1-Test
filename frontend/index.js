@@ -147,3 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching data:', error);
     }
 });
+function compare() {
+    const data1=getElementById("Student1")
+    const data2=getElementById("Student2")
+}
