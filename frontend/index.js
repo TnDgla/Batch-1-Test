@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         let filteredData = [...data]; // Keep original data separate
         const leaderboardBody = document.getElementById('leaderboard-body');
         const sectionFilter = document.getElementById('section-filter');
+        let pinnedRows = [];
 
         // Populate section filter dropdown
         const populateSectionFilter = () => {
@@ -50,7 +51,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Function to render the leaderboard
         const renderLeaderboard = (sortedData) => {
             leaderboardBody.innerHTML = '';
-            sortedData.forEach((student, index) => {
+            const combinedData = [...pinnedRows, ...sortedData.filter(student => !pinnedRows.includes(student))];
+            combinedData.forEach((student, index) => {
                 const row = document.createElement('tr');
                 row.classList.add('border-b', 'border-gray-700');
                 row.innerHTML = `
@@ -67,6 +69,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td class="p-4 text-yellow-400">${student.mediumSolved || 'N/A'}</td>
                     <td class="p-4 text-red-400">${student.hardSolved || 'N/A'}</td>
                 `;
+                row.addEventListener('click', () => {
+                    if (pinnedRows.includes(student)) {
+                        pinnedRows = pinnedRows.filter(pinnedStudent => pinnedStudent !== student);
+                    } else {
+                        pinnedRows.push(student);
+                    }
+                    renderLeaderboard(filteredData);
+                });
                 leaderboardBody.appendChild(row);
             });
         };
