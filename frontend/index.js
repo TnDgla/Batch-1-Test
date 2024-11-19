@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    let filteredData=[];
     try {
         const response = await fetch("http://localhost:3001/data");
         const data = await response.json();
-        let filteredData = [...data]; // Keep original data separate
+         filteredData = [...data]; // Keep original data separate
         const leaderboardBody = document.getElementById('leaderboard-body');
         const sectionFilter = document.getElementById('section-filter');
 
@@ -146,4 +147,56 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error('Error fetching data:', error);
     }
+    let clickedrow=document.getElementsByClassName('border-b border-gray-700');
+    clickedrow[2].addEventListener("click", myFunction);
+    clickedrow[0].addEventListener("click", myFunction);
+    clickedrow[1].addEventListener("click", myFunction);
+    clickedrow[3].addEventListener("click", myFunction);
+    clickedrow[4].addEventListener("click", myFunction);
+    clickedrow[5].addEventListener("click", myFunction);
+    clickedrow[6].addEventListener("click", myFunction);
+    clickedrow[7].addEventListener("click", myFunction);
+    clickedrow[8].addEventListener("click", myFunction);
+    clickedrow[9].addEventListener("click", myFunction);
+    clickedrow[10].addEventListener("click", myFunction);
+    clickedrow[11].addEventListener("click", myFunction);
+
+
+
+    let row1data=[{
+    "roll": "2215001289",
+    "name": "PRASHANT PATHAK",
+    "url": "https://leetcode.com/u/prashantpathak01/",
+    "section": "D",
+    "username": "prashantpathak01",
+    "totalSolved": 1081,
+    "easySolved": 443,
+    "mediumSolved": 553,
+    "hardSolved": 85
+  },
+  {
+    "roll": "2215500064",
+    "name": "DIVYANSH SINGH",
+    "url": "https://leetcode.com/u/Divyansh2304/",
+    "section": "AC",
+    "username": "Divyansh2304",
+    "totalSolved": 865,
+    "easySolved": 205,
+    "mediumSolved": 474,
+    "hardSolved": 186
+  }];
+ 
+ function myFunction() {
+   alert("row clciked");
+   
+row1data[0].name=filteredData[0].name;
+   filteredData[0].name=clickedrow[2].name;
+   clickedrow[2].name=row1data[0].name;
+   
+
+ }
+ console.log(filteredData[2]);
+ console.log(filteredData[0]);
 });
+
+ 
