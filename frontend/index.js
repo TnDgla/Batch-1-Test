@@ -147,3 +147,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching data:', error);
     }
 });
+
+const btn =  document.querySelector('.btn');
+const userName = document.querySelectorAll('.userName');
+const RollNumber = document.querySelectorAll('.RollNumber');
+const dataCompare = (e) => {
+    console.log(e.target.value);
+    
+} 
+btn.addEventListener('click',()=>{
+
+})

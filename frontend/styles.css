@@ -15,3 +15,10 @@ tr {
 tr:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
+.compare{
+    display: flex;
+    flex-direction: column;
+}
+.compare input{
+    color: black !important;
+}
