@@ -15,3 +15,8 @@ tr {
 tr:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
+
+.compare{
+    border: 10px solid red;
+    background-color: yellow;
+}
