@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,18 +10,19 @@
 <body class="bg-gray-900 text-white p-5">
     <div class="container mx-auto my-10">
         <div class="">
-            <!-- Leaderboard -->
+            Leaderboard
             <div class="col-span-2 bg-gray-800 rounded-lg shadow-md p-6 overflow-x-auto">
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-4xl font-bold">TBPPP Leaderboard</h1>
                     <div class="flex gap-4 items-center">
                         <select id="section-filter" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="all">All Sections</option>
-                            <!-- Options will be dynamically added -->
+                             Options will be dynamically added
                         </select>
                         <button id="export-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded flex items-center transition duration-150 ease-in-out">
                             <i class="fas fa-download mr-2"></i> Export to CSV
                         </button>
+
                     </div>
                 </div>
                 <table class="min-w-full bg-gray-900 rounded-lg overflow-hidden shadow-md">
@@ -35,6 +36,11 @@
                                 <button id="sort-section" class="ml-2 hover:text-white">
                                     <i class="fas fa-sort"></i>
                                 </button>
+
+                                <div>
+                                   
+                
+                                </div> 
                             </th>
                             <th class="p-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                 Total Solved
@@ -55,26 +61,28 @@
                                 </button>
                             </th>
                             <th class="p-4 text-left text-xs font-medium text-red-400 uppercase tracking-wider">
-                                Hard
-                                <button id="sort-hard" class="ml-2 hover:text-white">
+                                Hard -->
+                                <!-- <button id="sort-hard" class="ml-2 hover:text-white">
                                     <i class="fas fa-sort"></i>
                                 </button>
                             </th>
                         </tr>
                     </thead>
                     <tbody id="leaderboard-body">
-                        <!-- Data will be dynamically added here -->
+                        Data will be dynamically added here
+                         
                     </tbody>
                 </table>
 
-                <!-- Loading State -->
+                Loading State
                 <div id="loading-state" class="hidden">
-                    <div class="flex justify-center items-center p-8">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                    <div class="flex justify-center items-center p-8"> -->
+                        <!-- <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
                     </div>
                 </div>
 
-                <!-- Error State -->
+    Error State
+    <div class="highlighters" ></div>
                 <div id="error-state" class="hidden">
                     <div class="text-center p-8 text-red-500">
                         <i class="fas fa-exclamation-circle text-2xl mb-2"></i>
@@ -85,5 +93,201 @@
         </div>
     </div>
     <script src="index.js"></script>
+    
+</body> 
+</html> --> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> TBPPP Leaderboard</title>
+    <style>
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #35f21c;
+            padding: 8px;
+        }
+        th {
+            background-color: #673b3b;
+        }
+        #searchBar {
+            margin-bottom: 10px;
+            padding:10 px;
+
+            width: 100%;
+        }
+        .pinned {
+            background-color: #978a16;
+        }
+        
+            .comparison-box {
+                border: 1px solid #930d60;
+                padding: 10px;
+                margin-top: 20px;
+                text-align: center;
+            }
+    </style>
+    
+</head>
+<body>
+    <input type="text" id="searchBar" placeholder="Search for names..">
+    <table id="leaderboard">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Section</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr onclick="pinRow(this)">
+                <td>parth</td>
+                <td>D</td>
+                <td>95</td>
+            </tr>
+            <tr onclick="pinRow(this)">
+                <td>naman</td>
+                <td>AC</td>
+                <td>88</td>
+            </tr>
+            <tr onclick="pinRow(this)">
+                <td>ananya</td>
+                <td>E</td>
+                <td>92</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="comparison-box">
+        <h3>Compare Participants</h3>
+        <input type="text" id="participant1" placeholder="Enter first name or roll number">
+        <input type="text" id="participant2" placeholder="Enter second name or roll number">
+        <button onclick="compareParticipants()">Compare</button>
+        <div id="comparisonResult"></div>
+    </div>
+    
+
+    <script>
+        function pinRow(row) {
+            var tbody = document.querySelector('#leaderboard tbody');
+            tbody.insertBefore(row, tbody.firstChild);
+            row.classList.add('pinned');
+        }
+        function compareParticipants() {
+            var name1 = document.getElementById('participant1').value.toLowerCase();
+            var name2 = document.getElementById('participant2').value.toLowerCase();
+            var rows = document.querySelectorAll('#leaderboard tbody tr');
+            var participant1 = null;
+            var participant2 = null;
+
+            rows.forEach(function(row) {
+                var name = row.querySelector('td').textContent.toLowerCase();
+                if (name === name1) {
+                    participant1 = row;
+                }
+                if (name === name2) {
+                    participant2 = row;
+                }
+            });
+            if (participant1 && participant2) {
+                var score1 = parseInt(participant1.cells[2].textContent);
+                var score2 = parseInt(participant2.cells[2].textContent);
+                var result = `
+                    <p>${participant1.cells[0].textContent} vs ${participant2.cells[0].textContent}</p>
+                    <p>Total: ${score1} vs ${score2}</p>
+                    <p>${score1 > score2 ? participant1.cells[0].textContent + ' > ' + participant2.cells[0].textContent : participant2.cells[0].textContent + ' > ' + participant1.cells[0].textContent}</p>
+                `;
+                document.getElementById('comparisonResult').innerHTML = result;
+            } else {
+                document.getElementById('comparisonResult').innerHTML = '<p>Participants not found</p>';
+            }
+        }
+    </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
