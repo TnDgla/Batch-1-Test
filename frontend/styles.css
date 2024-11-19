@@ -15,3 +15,7 @@ tr {
 tr:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
+.bg-yellow-500 {
+    background-color: #fbbf24;
+    transition: background-color 1s ease-in-out;
+}
